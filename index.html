@@ -6,14 +6,27 @@
   <script src="https://dev.inscribe.today/playground/inscriboor.js"></script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🟧</text></svg>">
   <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-    * {font-family: 'Roboto Mono', monospace; background:white; color:black; font-size:1.5rem; text-align:center}
-    body {display: flex; justify-content: center; align-items: center; height: 100vh;}
-    #progressive-form-container {display: flex; flex-direction: column; align-items: center;}
+    @import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
+    * {font-family: 'Work Sans', sans-serif; background:white; color:black; font-size:1.5rem; text-align:center}
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #progressive-form-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     button {border:0}
-    .form-field {margin-bottom: 10px;}
+    .form-field {
+      margin-bottom: 10px;
+    }
     button:hover, input:hover {cursor: pointer;}
-    .hidden {display: none;}
+    .hidden {
+      display: none;
+    }
     p {width:750px; overflow-wrap: break-word}
     ::placeholder {color:black}
     input {border:1px solid black; border-radius:5px}
@@ -37,6 +50,7 @@
         <input type="text" id="addressInput" oninput="onAddressInputChange()" name="address" placeholder="receive address" required>
         <button type="button" id="review" onclick="reviewTransaction()" disabled>→</button>
       </div>
+
     <div id="response"></div>
     <div id="summary" class="hidden"></div>
     <p id="countdown"></p>
@@ -62,17 +76,24 @@
     const infoContainer = document.getElementById('info');
     const orderStatusButton = document.getElementById('checkOrderStatus');
     const countdown = document.getElementById('countdown');
+
     function checkhandle() {
         handle = '@' + handleField.value;
+
+        // Show the loader before making the API request
         var loader = document.getElementById('loader');
         loader.classList.remove('hidden');
+
         checkNames(handle, suffix, (provider, count, inscriptionIDs) => {
           console.log(handle);
+            // Hide the loader once the API response is received
           loader.classList.add('hidden');
           if (count > 0) {
             for (let i = 0; i < inscriptionIDs.length; i++) {
                 let inscriptionName = '';
+                //check if name is inscribed as sns
                 if (inscriptionIDs[i].name.includes("{")) {
+
                   inscriptionName = inscriptionIDs[i].name.replace(/'/g, '"').replace(/\\\"/g, "'").trim();
                   // Remove trailing comma if exists
                   if (inscriptionName.endsWith(',')) {
@@ -107,6 +128,7 @@
           }
       });
     }
+
     function onAddressInputChange() {
       var address = document.getElementById('addressInput').value;
         if (isValidTaprootAddress(address)) {
@@ -117,6 +139,7 @@
             reviewButton.disabled = true;
         }
     }
+
     function submitFee(){
       nextFeeButton.parentNode.classList.add('hidden');
       addressField.parentNode.classList.remove('hidden');
@@ -129,9 +152,21 @@
       summaryContainer.classList.remove('hidden');
       submitButton.classList.remove('hidden');
     }
+
     function onSubmit(e) {
       e.preventDefault();
       localStorage.clear();
+
+      //create json
+      //let basedJSON = {
+        //"p": "sns",
+        //"op": "reg",
+        //"name": handleField.value+suffix,
+      //};
+      //console.log(JSON.stringify(basedJSON));
+      //const data = JSON.stringify(basedJSON);
+
+      //create payload with user inputs and other static variables for API request
       const payload = {
           "address": addressField.value,
           "feeRate": feeRateField.value,
@@ -169,6 +204,7 @@
           }
       });
     }
+
   </script>
 </body>
 </html>
